@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:tugas_1/components/ui/custom_app_bar.dart';
+import 'package:tugas_1/config/app_colors.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class Tugas1 extends StatefulWidget {
+  const Tugas1({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<Tugas1> createState() => _Tugas1State();
 }
 
-class _HomePageState extends State<HomePage> {
+class _Tugas1State extends State<Tugas1> {
   final _panjangController = TextEditingController();
   final _lebarController = TextEditingController();
   String? _hasil = '';
@@ -25,15 +27,20 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tugas 1'),
-        centerTitle: true,
-        backgroundColor: Colors.grey.shade300,
-      ),
+      appBar: const CustomAppBar(title: 'Tugas 1'),
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
+            ElevatedButton.icon(
+              icon: const Icon(Icons.arrow_forward),
+              label: const Text('Ke Tugas 2'),
+              onPressed: () => Navigator.pushNamed(context, '/tugas_2'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+              ),
+            ),
             const Text(
               'Menghitung persegi panjang',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
@@ -44,7 +51,6 @@ class _HomePageState extends State<HomePage> {
             TextField(
               controller: _panjangController,
               keyboardType: TextInputType.number,
-              autofocus: true,
               decoration: const InputDecoration(
                   hintText: 'Masukkan panjang persegi panjang',
                   label: Text('Panjang')),
