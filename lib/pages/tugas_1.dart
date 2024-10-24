@@ -14,11 +14,22 @@ class _Tugas1State extends State<Tugas1> {
   final _lebarController = TextEditingController();
   String? _hasil = '';
 
-  void handleHitung() {
+  void hitung(String hitungApa) {
+    if (_panjangController.text.isEmpty || _lebarController.text.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Isi semua field')));
+      return; // * Biar kaga lanjut
+    }
+
+    int panjangDouble = int.parse(_panjangController.text);
+    int lebarDouble = int.parse(_lebarController.text);
+    int rumusLuas = panjangDouble * lebarDouble;
+    int rumusKeliling = 2 * (panjangDouble + lebarDouble);
+
     setState(() {
-      int operasi =
-          int.parse(_panjangController.text) * int.parse(_lebarController.text);
-      _hasil = operasi.toString();
+      _hasil = hitungApa == 'keliling'
+          ? 'Keliling: $rumusKeliling'
+          : 'Luas: $rumusLuas';
       _panjangController.clear();
       _lebarController.clear();
     });
@@ -66,23 +77,30 @@ class _Tugas1State extends State<Tugas1> {
                   hintText: 'Masukkan lebar persegi panjang',
                   label: Text('Lebar')),
             ),
-            const SizedBox(
-              height: 16,
+            const SizedBox(height: 16),
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              width:
+                  double.infinity, // Mengatur lebar button agar memenuhi layar
+              child: ElevatedButton(
+                onPressed: () => hitung('keliling'),
+                child: const Text('Hitung keliling'),
+              ),
             ),
             Container(
               margin: const EdgeInsets.only(bottom: 16),
               width:
                   double.infinity, // Mengatur lebar button agar memenuhi layar
               child: ElevatedButton(
-                onPressed: handleHitung,
-                child: const Text('Hitung'),
+                onPressed: () => hitung('luas'),
+                child: const Text('Hitung luas'),
               ),
             ),
 
             if (_hasil != '')
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
+                    color: AppColors.surface,
                     borderRadius: BorderRadius.circular(6)),
                 padding: const EdgeInsets.all(16),
                 child: Text(
@@ -90,7 +108,7 @@ class _Tugas1State extends State<Tugas1> {
                   style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.red),
+                      color: AppColors.primary),
                 ),
               )
           ],

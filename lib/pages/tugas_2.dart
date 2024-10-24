@@ -32,19 +32,22 @@ class _Tugas2State extends State<Tugas2> {
     super.dispose();
   }
 
-  void hitung() {
+  void hitung(String hitungApa) {
     if (_panjangController.text.isEmpty || _lebarController.text.isEmpty) {
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('Isi semua field')));
       return; // * Biar kaga lanjut
     }
 
-    int panjangInt = int.parse(_panjangController.text);
-    int lebarInt = int.parse(_lebarController.text);
-    int rumus = panjangInt * lebarInt;
+    int panjangDouble = int.parse(_panjangController.text);
+    int lebarDouble = int.parse(_lebarController.text);
+    int rumusLuas = panjangDouble * lebarDouble;
+    int rumusKeliling = 2 * (panjangDouble + lebarDouble);
 
     setState(() {
-      _hasil = 'Luas: $rumus';
+      _hasil = hitungApa == 'keliling'
+          ? 'Keliling: $rumusKeliling'
+          : 'Luas: $rumusLuas';
       // * Menghapus isi TextField setelah menghitung
       _panjangController.clear();
       _lebarController.clear();
@@ -62,25 +65,45 @@ class _Tugas2State extends State<Tugas2> {
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton.icon(
-                icon: const Icon(Icons.arrow_back),
-                label: const Text('Ke Tugas 1'),
-                onPressed: () => Navigator.pushNamed(context, '/'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
+              Center(
+                child: ElevatedButton.icon(
+                  icon: const Icon(Icons.arrow_back),
+                  label: const Text('Ke Tugas 1'),
+                  onPressed: () => Navigator.pushNamed(context, '/'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                  ),
                 ),
               ),
-              const SizedBox(height: 24),
-              Text(
-                'Menghitung Persegi Panjang',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
+              Padding(
+                padding: const EdgeInsets.only(top: 24, bottom: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Menghitung Persegi Panjang',
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.bold,
+                              ),
                     ),
+                    Text(
+                      'Keliling dan Luas',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineSmall
+                          ?.copyWith(
+                              color: AppColors.textSecondary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 16),
               TextField(
                 controller: _panjangController,
                 keyboardType: TextInputType.number,
@@ -103,31 +126,48 @@ class _Tugas2State extends State<Tugas2> {
                   hintText: 'Masukkan lebar',
                 ),
               ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => hitung(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    onPressed: () => hitung('keliling'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 20),
+                    ),
+                    child: const Text(
+                      'Hitung Keliling',
+                      style: TextStyle(color: AppColors.surface, fontSize: 16),
+                    ),
                   ),
-                  child: const Text(
-                    'Hitung Luas',
-                    style: TextStyle(color: AppColors.surface, fontSize: 16),
+                  ElevatedButton(
+                    onPressed: () => hitung('luas'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 20),
+                    ),
+                    child: const Text(
+                      'Hitung Luas',
+                      style: TextStyle(color: AppColors.surface, fontSize: 16),
+                    ),
                   ),
-                ),
+                ],
               ),
               if (_hasil.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        _hasil,
-                        style: Theme.of(context).textTheme.headlineLarge,
-                        textAlign: TextAlign.center,
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          _hasil,
+                          style: Theme.of(context).textTheme.headlineLarge,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                     ),
                   ),
